@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from fs.memoryfs import MemoryFS
 
@@ -78,6 +78,44 @@ def get_dummy_course(start, announcement=None, is_new=None, advertised_start=Non
         announcement=announcement, advertised_start=advertised_start, end=end)
 
     return system.process_xml(start_xml)
+
+
+class HasEndedMayCertifyTestCase(unittest.TestCase):
+    """Double check the semantics around when to finalize courses."""
+
+    def setUp(self):
+        system = DummySystem(load_error_modules=True)
+        sample_xml = """
+         <course org="{org}" course="{course}" display_organization="{org}_display" display_coursenumber="{course}_display"
+                graceperiod="1 day" url_name="test"
+                start="2012-01-01T12:00"
+                {end}
+                certificates_show_before_end={cert}>
+            <chapter url="hi" url_name="ch" display_name="CH">
+                <html url_name="h" display_name="H">Two houses, ...</html>
+            </chapter>
+         </course>
+        """.format(org=ORG, course=COURSE)
+        past_end = (datetime.now() - timedelta(days=12)).strftime("%Y-%m%dT%H:%M:00")
+        future_end = (datetime.now() + timedelta(days=12)).strftime("%Y-%m%dT%H:%M:00")
+        self.past_show_certs = system.process_xml(sample_xml.format(end=past_end, cert=True))
+        self.past_noshow_certs = system.process_xml(sample_xml.format(end=past_end, cert=False))
+        self.future_show_certs = system.process_xml(sample_xml.format(end=future_end, cert=True))
+        self.future_noshow_certs = system.process_xml(sample_xml.format(end=future_end, cert=False))
+
+    def test_has_ended(self):
+        """Check that has_ended correctly tells us when a course is over."""
+        self.assertTrue(self.past_show_certs.has_ended())
+        self.assertTrue(self.past_noshow_certs.has_ended())
+        self.assertFalse(self.future_show_certs.has_ended())
+        self.assertFalse(self.future_noshow_certs.has_ended())
+
+    def test_may_certify(self):
+        """Check that may_certify correctly tells us when a course may wrap."""
+        self.assertTrue(self.past_show_certs.may_certify())
+        self.assertTrue(self.past_noshow_certs.may_certify())
+        self.assertTrue(self.future_show_certs.may_certify())
+        self.assertFalse(self.future_noshow_certs.may_certify())
 
 
 class IsNewCourseTestCase(unittest.TestCase):

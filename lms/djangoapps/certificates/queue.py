@@ -15,6 +15,7 @@ from verify_student.models import SoftwareSecurePhotoVerification
 import json
 import random
 import logging
+import lxml
 from xmodule.modulestore import Location
 
 
@@ -168,6 +169,7 @@ class XQueueCertInterface(object):
             if course is None:
                 course = courses.get_course_by_id(course_id)
             profile = UserProfile.objects.get(user=student)
+            profile_name = profile.name
 
             # Needed
             self.request.user = student
@@ -197,9 +199,11 @@ class XQueueCertInterface(object):
             cert.user = student
             cert.grade = grade['percent']
             cert.course_id = course_id
-            cert.name = profile.name
+            cert.name = profile_name
+            # Strip HTML from grade range label
+            grade_text = lxml.html.fromstring(grade.get('grade', None)).text_content()
 
-            if is_whitelisted or grade['grade'] is not None:
+            if is_whitelisted or grade_text is not None:
 
                 # check to see whether the student is on the
                 # the embargoed country restricted list
@@ -217,8 +221,8 @@ class XQueueCertInterface(object):
                         'action': 'create',
                         'username': student.username,
                         'course_id': course_id,
-                        'name': profile.name,
-                        'grade': grade['grade'],
+                        'name': profile_name,
+                        'grade': grade_text,
                         'template_pdf': template_pdf,
                     }
                     new_status = status.generating
@@ -226,8 +230,8 @@ class XQueueCertInterface(object):
                     cert.save()
                     self._send_to_xqueue(contents, key)
             else:
-                new_status = status.notpassing
-                cert.status = new_status
+                cert_status = status.notpassing
+                cert.status = cert_status
                 cert.save()
 
         return new_status
