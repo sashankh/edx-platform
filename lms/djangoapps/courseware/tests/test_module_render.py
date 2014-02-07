@@ -27,8 +27,8 @@ from xmodule.x_module import XModuleDescriptor
 from courseware import module_render as render
 from courseware.courses import get_course_with_access, course_image_url, get_course_info_section
 from courseware.model_data import FieldDataCache
-from courseware.tests.factories import StudentModuleFactory, UserFactory
-from courseware.tests.tests import LoginEnrollmentTestCase
+from courseware.tests.factories import StudentModuleFactory, UserFactory, StaffFactory
+from courseware.tests.tests import LoginEnrollmentTestCase, TEST_DATA_MONGO_MODULESTORE
 from courseware.tests.modulestore_config import TEST_DATA_MIXED_MODULESTORE
 
 from lms.lib.xblock.runtime import quote_slashes
@@ -507,6 +507,92 @@ class TestHtmlModifiers(ModuleStoreTestCase):
             ),
             result_fragment.content
         )
+
+
+@override_settings(MODULESTORE=TEST_DATA_MONGO_MODULESTORE)
+@patch.dict('django.conf.settings.FEATURES', {'DISPLAY_DEBUG_INFO_TO_STAFF': True, 'DISPLAY_HISTOGRAMS_TO_STAFF': True})
+@patch('courseware.module_render.has_access', Mock(return_value=True))
+class TestStaffStudioCourse(ModuleStoreTestCase):
+    """Tests to verify that the 'View in Studio' links visibility follows the test cases."""
+
+    def setUp(self):
+        self.user = UserFactory.create(
+            is_staff=True,
+        )
+        self.request = RequestFactory().get('/')
+        self.request.user = self.user
+        self.request.session = {}
+
+        self.course = CourseFactory.create()
+
+        self.descriptor = ItemFactory.create(
+            category='vertical',
+        )
+
+        self.location = self.descriptor.location
+        self.field_data_cache = FieldDataCache.cache_for_descriptor_descendents(
+            self.course.id,
+            self.user,
+            self.descriptor
+        )
+
+    def test_view_in_studio_link_studio_course(self):
+        """Regular Studio courses should see 'View in Studio' links."""
+
+        module = render.get_module(
+            self.user,
+            self.request,
+            self.location,
+            self.field_data_cache,
+            self.course.id,
+        )
+
+        result_fragment = module.render('student_view')
+        self.assertIn('View Unit in Studio', result_fragment.content)
+
+    @override_settings(MODULESTORE=TEST_DATA_MIXED_MODULESTORE)
+    def test_view_in_studio_link_xml_backed(self):
+        """XML backed courses that don't use Mongo should not see 'View in Studio' links."""
+
+        module = render.get_module(
+            self.user,
+            self.request,
+            self.location,
+            self.field_data_cache,
+            self.course.id,
+        )
+
+        result_fragment = module.render('student_view')
+        self.assertNotIn('View Unit in Studio', result_fragment.content)
+
+    def test_view_in_studio_link_xml_authored(self):
+        """Courses that change 'course_edit_method' setting can hide 'View in Studio' links."""
+
+        course = CourseFactory.create(
+            course_edit_method = 'XML'
+        )
+
+        descriptor = ItemFactory.create(
+            category='vertical',
+        )
+
+        location = descriptor.location
+        field_data_cache = FieldDataCache.cache_for_descriptor_descendents(
+            course.id,
+            self.user,
+            descriptor
+        )
+
+        module = render.get_module(
+            self.user,
+            self.request,
+            location,
+            field_data_cache,
+            course.id,
+        )
+
+        result_fragment = module.render('student_view')
+        self.assertNotIn('View Unit in Studio', result_fragment.content)
 
 
 @override_settings(MODULESTORE=TEST_DATA_MIXED_MODULESTORE)
