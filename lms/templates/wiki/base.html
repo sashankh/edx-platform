@@ -1,5 +1,5 @@
 {% extends "main_django.html" %}
-{% load compressed %}{% load sekizai_tags i18n microsite %}{% load url from future %}{% load staticfiles %}
+{% load compressed %}{% load sekizai_tags i18n microsite course_wiki %}{% load url from future %}{% load staticfiles %}
 
 {% block title %}<title>{% block pagetitle %}{% endblock %} | {% trans "Wiki" %} | {% platform_name %}</title>{% endblock %}
 
@@ -49,6 +49,7 @@
 {% block nav_skip %}#wiki-content{% endblock %}
 
 {% block body %}
+  {% load_course %}
   {% if course %}
     {% include "courseware/course_navigation.html" with active_page_context="wiki" %}
   {% endif %}
