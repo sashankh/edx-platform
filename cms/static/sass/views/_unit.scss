@@ -825,11 +825,6 @@ body.course.unit,.view-unit {
           }
         }
 
-        // actions
-        .create-action, .remove-action, .setting-clear {
-
-        }
-
         .setting-clear {
           vertical-align: top;
           margin-top: ($baseline/4);
@@ -846,11 +841,6 @@ body.course.unit,.view-unit {
           *[class^="icon-"] {
             margin-right: ($baseline/4);
           }
-
-          // STATE: disabled
-          &.is-disabled {
-
-          }
         }
 
         .remove-setting {
@@ -862,11 +852,6 @@ body.course.unit,.view-unit {
 
           &:hover {
             color: $blue;
-          }
-
-          // STATE: disabled
-          &.is-disabled {
-
           }
         }
       }
