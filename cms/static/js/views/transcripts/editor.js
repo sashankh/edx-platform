@@ -20,7 +20,7 @@ function($, Backbone, _, Utils, MetadataView, MetadataCollection) {
             this.collection = new MetadataCollection(models);
 
             // initialize MetadataView.Editor
-            this.metadataEditor = new MetadataView.Editor({
+            this.settingsView = new MetadataView.Editor({
                 el: this.$el,
                 collection: this.collection
             });

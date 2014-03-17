@@ -226,13 +226,17 @@ def xblock_view_handler(request, package_id, view_name, tag=None, branch=None, v
         elif view_name in ('student_view', 'container_preview'):
             is_container_view = (view_name == 'container_preview')
 
+            # TODO: calculate the draft mode
+            is_draft = True
+
             # Only show the new style HTML for the container view, i.e. for non-verticals
             # Note: this special case logic can be removed once the unit page is replaced
             # with the new container view.
-            is_read_only_view = is_container_view
+            is_read_only_view = not is_draft
             context = {
                 'runtime_type': 'studio',
                 'container_view': is_container_view,
+                'is_draft': is_draft,
                 'read_only': is_read_only_view,
                 'root_xblock': component,
             }

@@ -32,12 +32,12 @@ define ["jquery", "underscore", "gettext", "xblock/runtime.v1",
       models = [];
       for key of metadataData
         models.push(metadataData[key])
-      @metadataEditor = new MetadataView.Editor({
+      @settingsView = new MetadataView.Editor({
           el: metadataEditor,
           collection: new MetadataCollection(models)
       })
 
-      @module.setMetadataEditor(@metadataEditor) if @module.setMetadataEditor
+      @module.setMetadataEditor(@settingsView) if @module.setMetadataEditor
 
       # Need to update set "active" class on data editor if there is one.
       # If we are only showing settings, hide the data editor controls and update settings accordingly.
@@ -47,7 +47,7 @@ define ["jquery", "underscore", "gettext", "xblock/runtime.v1",
         @hideDataEditor()
 
       title = interpolate(gettext('<em>Editing:</em> %s'),
-        [@metadataEditor.getDisplayName()])
+        [@settingsView.getDisplayName()])
       @$el.find('.component-name').html(title)
 
     customMetadata: ->
@@ -60,7 +60,7 @@ define ["jquery", "underscore", "gettext", "xblock/runtime.v1",
         return _metadata
 
     changedMetadata: ->
-      return _.extend(@metadataEditor.getModifiedMetadataValues(), @customMetadata())
+      return _.extend(@settingsView.getModifiedMetadataValues(), @customMetadata())
 
     createItem: (parent, payload, callback=->) ->
       payload.parent_locator = parent

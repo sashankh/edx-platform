@@ -1,6 +1,6 @@
-define(["js/views/baseview", "underscore", "jquery", "jquery.form"],
-function(BaseView, _, $) {
-var UploadDialog = BaseView.extend({
+define(["js/views/modals/base_modal", "underscore", "jquery", "jquery.form"],
+function(BaseModal, _, $) {
+var UploadDialog = BaseModal.extend({
     options: {
         shown: true,
         successMessageTimeout: 2000 // 2 seconds

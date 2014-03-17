@@ -19,9 +19,9 @@ define(["jquery", "underscore", "backbone", "js/utils/handle_iframe_binding"],
             constructor: function(options) {
                 _.bindAll(this, 'beforeRender', 'render', 'afterRender');
                 var _this = this;
-                this.render = _.wrap(this.render, function (render) {
+                this.render = _.wrap(this.render, function (render, options) {
                     _this.beforeRender();
-                    render();
+                    render(options);
                     _this.afterRender();
                     return _this;
                 });
@@ -43,6 +43,7 @@ define(["jquery", "underscore", "backbone", "js/utils/handle_iframe_binding"],
 
             toggleExpandCollapse: function(event) {
                 var target = $(event.target);
+                event.stopPropagation();
                 event.preventDefault();
                 target.closest('.expand-collapse').toggleClass('expand').toggleClass('collapse');
                 target.closest('.is-collapsible, .window').toggleClass('collapsed');

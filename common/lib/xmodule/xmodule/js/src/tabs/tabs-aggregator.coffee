@@ -8,8 +8,9 @@ class @TabsEditingDescriptor
     (Like many CodeMirrors).
     ###
 
-    # hide editor/settings bar
+    # hide editor/settings bar (in old-style and new-style modals)
     @element.closest('.component-editor').find('.component-edit-header').hide()
+    @element.closest('.modal-editor').find('.modal-header').hide()
 
     @$tabs = $(".tab", @element)
     @$content = $(".component-tab", @element)
