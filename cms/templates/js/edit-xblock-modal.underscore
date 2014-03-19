@@ -1,23 +1,23 @@
 <div
- class="wrapper wrapper-dialog wrapper-dialog-edit-sectionrelease edit-section-publish-settings wrapper-dialog-edit-xblock"
- aria-describedby="dialog-edit-xblock-description"
- aria-labelledby="dialog-edit-xblock-title"
+ class="wrapper wrapper-modal-window wrapper-modal-window-edit-xblock"
+ aria-describedby="modal-window-description"
+ aria-labelledby="modal-window-title"
  aria-hidden=""
  role="dialog">
-    <div class="dialog confirm modal-editor">
+    <div class="modal-window confirm modal-editor modal-lg">
         <form class="edit-xblock-modal" action="#">
             <div class="modal-header">
-                <h2 class="title dialog-edit-sectionrelease-title"><%= gettext("Edit Component") %></h2>
-                <ul class="action-list action-modes">
+                <h2 class="title modal-window-title"><%= gettext("Edit Component") %></h2>
+                <ul class="modal-modes action-list action-modes">
                     <li class="action-item" data-mode="editor"><a href="#" class="editor-button"><%= gettext("Editor") %></a></li>
                     <li class="action-item" data-mode="settings"><a href="#" class="settings-button"><%= gettext("Settings") %></a></li>
                 </ul>
             </div>
-            <div class="form-content">
+            <div class="modal-content">
                 <div class="xblock-editor"></div>
             </div>
-            <div class="actions">
-                <h3 class="sr"><%= gettext("Form Actions") %></h3>
+            <div class="modal-actions">
+                <h3 class="sr"><%= gettext("Actions") %></h3>
                 <ul>
                 <li class="action-item">
                     <a href="#" class="button action-primary action-save"><%= gettext("Save") %></a>

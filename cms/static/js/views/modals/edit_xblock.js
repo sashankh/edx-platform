@@ -118,13 +118,13 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
             },
 
             show: function() {
-                $('body').addClass('dialog-is-shown');
-                this.$('.wrapper-dialog-edit-xblock').addClass('is-shown');
+                $('body').addClass('modal-window-is-shown');
+                this.$('.wrapper-modal-window-edit-xblock').addClass('is-shown');
             },
 
             hide: function() {
                 $('body').removeClass('modal-window-is-shown');
-                this.$('.wrapper-modal-edit-xblock').removeClass('is-shown');
+                this.$('.wrapper-modal-window-edit-xblock').removeClass('is-shown');
             }
         });
 

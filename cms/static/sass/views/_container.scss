@@ -162,3 +162,58 @@ body.view-container  .content-primary {
     text-transform: uppercase;
   }
 }
+
+
+// special overrides for video module editor
+body.view-container .xmodule_edit.xmodule_VideoDescriptor .editor-with-tabs {
+
+  .edit-header {
+    border: 0;
+    background-color: $gray-l4;
+    padding: ($baseline/2);
+
+    .component-name {
+      @extend %t-title5;
+      display: inline-block;
+      width: 48%;
+      margin-left: ($baseline/2);
+      font-weight: 600;
+      color: $black;
+    }
+
+    .editor-tabs {
+      display: inline-block;
+      width: 48%;
+      position: relative;
+      top: auto;
+      right: auto;
+      padding: 0;
+      text-align: right;
+
+      .inner_tab_wrap {
+        padding: 0;
+
+        a.tab {
+          @extend %btn-secondary-gray;
+          @extend %t-copy-sub1;
+          background-image: none;
+          box-shadow: none;
+          border: 0;
+          padding: ($baseline/4) ($baseline/2);
+          text-transform: uppercase;
+          font-weight: normal;
+
+          &.current {
+            background-color: $gray-d1;
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+
+  .tabs-wrapper {
+    border-top: 1px solid $gray-l3;
+  }
+
+}
