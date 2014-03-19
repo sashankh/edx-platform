@@ -112,21 +112,91 @@ function (VideoPlayer, VideoStorage) {
         // Require JS. At the time when we reach this code, the stand alone
         // HTML5 player is already loaded, so no further testing in that case
         // is required.
-        var video;
+        var video, onYTApiReady;
 
-        if(state.videoType === 'youtube') {
-            YT.ready(function() {
+        if (state.videoType === 'youtube') {
+            state.youtubeApiAvailable = false;
+
+            onYTApiReady = function () {
+                console.log('[Video info]: YouTube API is available and is loaded.');
+
                 video = VideoPlayer(state);
 
                 state.modules.push(video);
                 state.__dfd__.resolve();
-            });
+
+                state.youtubeApiAvailable = true;
+            };
+
+            if (window.YT) {
+                window.YT.ready(onYTApiReady);
+            } else {
+                window.onYouTubeIframeAPIReady = function () {
+                    window.console.log('[window.onYouTubeIframeAPIReady]: we are in!');
+                    onYTApiReady();
+                };
+
+                _loadYoutubeApi(state);
+            }
         } else {
             video = VideoPlayer(state);
 
             state.modules.push(video);
             state.__dfd__.resolve();
         }
+    }
+
+    function _loadYoutubeApi(state) {
+        console.log('[Video info]: YouTube API is not loaded. Will try to load...');
+
+        var alwaysTimeout = window.setTimeout(function () {
+            // Incase .getScript() below doesn't get to .done() or
+            // .fall() callbacks, we will have this safety timeout.
+            //
+            // In case if .done() or .fall() callbacks come through,
+            // this sdafety timeout will be canceled.
+            if (state.youtubeApiAvailable) {
+                // YouTube API has loaded successfully. Notify the server.
+                _reportToServer(state, true);
+            } else {
+                // Tell the server that YouTube API did not load.
+                _reportToServer(state, false);
+            }
+        }, 3000);
+
+        $.getScript(document.location.protocol + '//www.youtube.com/iframe_api')
+            .done(function(script, textStatus) {
+                window.clearTimeout(alwaysTimeout);
+
+                if (!state.youtubeApiAvailable) {
+                    // Just because we received something, doesn't mean it is the
+                    // YouTube API. Give half a second for the YouTube API to
+                    // initialize, and then check.
+                    window.setTimeout(function () {
+                        if (state.youtubeApiAvailable) {
+                            // YouTube API has loaded successfully. Notify the server.
+                            _reportToServer(state, true);
+                        } else {
+                            // Tell the server that YouTube API did not load.
+                            _reportToServer(state, false);
+                        }
+                    }, 500);
+                }
+            })
+            .fail(function(jqxhr, settings, exception) {
+                window.clearTimeout(alwaysTimeout);
+
+                // Tell the server that YouTube API did not load.
+                _reportToServer(state, false);
+            });
+    }
+
+    function _reportToServer(state, youtubeIsOk) {
+        if (!youtubeIsOk) {
+            console.log('[Video info]: YouTube API is not available.');
+        }
+
+        state.saveState(true, { youtube_is_ok: youtubeIsOk });
     }
 
     // function _configureCaptions(state)
