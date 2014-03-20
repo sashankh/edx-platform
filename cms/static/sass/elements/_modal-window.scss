@@ -27,6 +27,7 @@
     // basic modal content
     .modal-window  {
       @include box-sizing(border-box);
+      -webkit-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
       position: absolute;
       top: 50%;
