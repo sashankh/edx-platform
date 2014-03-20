@@ -3,6 +3,7 @@
 
 // start with the view/body
 [class*="view-"] {
+  overflow: auto;
 
   // modal-window backdrop covers the window
   .wrapper-modal-window {
@@ -223,10 +224,28 @@
   }
 
 
+  // specific modal overrides
+
+  // component editor
+  .modal-window {
+    .wrapper-comp-settings { 
+
+      .list-input {
+
+        &.settings-list {
+          height: ($baseline*21.25);
+          max-height: none;
+        }
+      }
+    }
+  }
+
+
   // modal-window set-up
   .wrapper-modal-window {
     visibility: hidden;
     pointer-events: none;
+    display: none;
 
     .modal-window {
       opacity: 0;
@@ -240,6 +259,7 @@
     .wrapper-modal-window.is-shown {
       visibility: visible;
       pointer-events: auto;
+      display: block;
 
       .modal-window {
         opacity: 1.0;
