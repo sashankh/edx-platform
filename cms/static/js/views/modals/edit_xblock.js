@@ -20,7 +20,9 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
                     editorView,
                     xblockInfo = this.xblockInfo,
                     success = options ? options.success : null;
-                this.$el.html(this.template());
+                this.$el.html(this.template({
+                    xblockInfo: xblockInfo
+                }));
                 editorView = new XBlockEditorView({
                     el: this.$('.xblock-editor'),
                     model: xblockInfo

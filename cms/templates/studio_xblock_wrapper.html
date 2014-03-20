@@ -1,9 +1,9 @@
 <%! from django.utils.translation import ugettext as _ %>
 % if xblock.location != xblock_context['root_xblock'].location:
   % if xblock.has_children:
-<section class="wrapper-xblock level-nesting" data-locator="${locator}">
+<section class="wrapper-xblock level-nesting" data-locator="${locator}" data-display-name="${xblock.display_name_with_default | h}" data-category="${xblock.category | h}">
   % else:
-<section class="wrapper-xblock level-element" data-locator="${locator}">
+<section class="wrapper-xblock level-element" data-locator="${locator}" data-display-name="${xblock.display_name_with_default | h}" data-category="${xblock.category | h}">
   % endif
 % endif
     <header class="xblock-header">
