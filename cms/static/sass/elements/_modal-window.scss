@@ -108,8 +108,11 @@
 
     // large modals - component editors and interactives
     .modal-lg {
+      -webkit-transform: translate(-50%, 0);
+      transform: translate(-50%, 0);
+      top: ($baseline*2);
       width: 65%;
-      min-width: ($baseline*30);
+      min-width: ($baseline*33);
       min-height: ($baseline*27);
 
       &.modal-editor {
