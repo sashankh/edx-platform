@@ -217,8 +217,11 @@ define([
 
     "js/spec/views/unit_spec"
     "js/spec/views/xblock_spec"
+    "js/spec/views/xblock_editor_spec"
 
-    # these tests are run separate in the cms-squire suite, due to process
+    "js/spec/views/modals/base_modal_spec",
+
+    # these tests are run separately in the cms-squire suite, due to process
     # isolation issues with Squire.js
     # "coffee/spec/views/assets_spec"
     ])

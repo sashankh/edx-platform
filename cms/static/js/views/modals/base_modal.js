@@ -8,7 +8,17 @@ define(["jquery", "underscore", "underscore.string", "gettext", "js/views/basevi
                 type: "prompt",
                 closeIcon: false,
                 icon: false
-            })
+            }),
+
+            show: function() {
+                $('body').addClass('modal-window-is-shown');
+                this.$('.wrapper-modal-window').addClass('is-shown');
+            },
+
+            hide: function() {
+                $('body').removeClass('modal-window-is-shown');
+                this.$('.wrapper-modal-window').removeClass('is-shown');
+            }
         });
 
         return BaseModal;

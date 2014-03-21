@@ -1,11 +1,13 @@
+/**
+ * XBlockEditorView displays the authoring view of an xblock, and allows the user to switch between
+ * the available modes.
+ */
 define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js/views/xblock",
     "js/views/metadata", "js/collections/metadata"],
     function ($, _, gettext, NotificationView, XBlockView, MetadataView, MetadataCollection) {
 
         var XBlockEditorView = XBlockView.extend({
             // takes XBlockInfo as a model
-
-            mode: 'editor-mode',
 
             options: $.extend({}, XBlockView.prototype.options, {
                 view: 'studio_view'
@@ -22,31 +24,27 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
             },
 
             initializeEditors: function() {
-                var metadataView,
-                    defaultMode = null;
-                metadataView = this.createMetadataView();
-                this.metadataView = metadataView;
+                var metadataEditor,
+                    defaultMode = 'editor';
+                metadataEditor = this.createMetadataEditor();
+                this.metadataEditor = metadataEditor;
                 if (this.getDataEditor()) {
                     defaultMode = 'editor';
-                } else if (metadataView) {
+                } else if (metadataEditor) {
                     defaultMode = 'settings';
                 }
-                if (defaultMode) {
-                    this.selectMode(defaultMode);
-                } else {
-                    console.error("Failed to find any editor tabs");
-                }
+                this.selectMode(defaultMode);
             },
 
-            createMetadataView: function() {
+            createMetadataEditor: function() {
                 var metadataEditor,
                     metadataData,
                     models = [],
                     key,
                     xblock = this.xblock,
                     metadataView = null;
-                metadataEditor = this.getMetadataEditor();
-                if (metadataEditor) {
+                metadataEditor = this.$('.metadata_edit');
+                if (metadataEditor.length === 1) {
                     metadataData = metadataEditor.data('metadata');
                     for (key in metadataData) {
                         if (metadataData.hasOwnProperty(key)) {
@@ -70,8 +68,7 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
             },
 
             getMetadataEditor: function() {
-                var editor = this.$('.metadata_edit');
-                return editor.length === 1 ? editor : null;
+                return this.metadataEditor;
             },
 
             save: function(options) {
@@ -99,7 +96,7 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
 
             getXBlockData: function() {
                 var xblock = this.xblock,
-                    metadataView = this.metadataView,
+                    metadataView = this.metadataEditor,
                     metadata,
                     data;
                 data = xblock.save();
@@ -109,6 +106,10 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
                 }
                 data.metadata = metadata;
                 return data;
+            },
+
+            getMode: function() {
+                return this.mode;
             },
 
             selectMode: function(mode) {
@@ -124,6 +125,7 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
                     dataEditor.addClass('is-inactive');
                     settingsEditor.addClass('is-active');
                 }
+                this.mode = mode;
             }
         });
 

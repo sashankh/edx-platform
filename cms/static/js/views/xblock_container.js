@@ -1,3 +1,7 @@
+/**
+ * XBlockContainerView is used to display an xblock which has children, and allows the
+ * user to interact with the children.
+ */
 define(["jquery", "underscore", "js/views/baseview", "js/views/xblock", "js/views/modals/edit_xblock"],
     function ($, _, BaseView, XBlockView, EditXBlockModal) {
 
@@ -20,8 +24,14 @@ define(["jquery", "underscore", "js/views/baseview", "js/views/xblock", "js/view
                 var self = this,
                     noContentElement = this.noContentElement,
                     xblockView = this.xblockView;
+                // Hide both blocks until we know which one to show
                 noContentElement.addClass('is-hidden');
                 xblockView.$el.addClass('is-hidden');
+
+                // Add actions to any root buttons
+                self.addButtonActions(this.$el);
+
+                // Render the xblock
                 xblockView.render({
                     success: function(xblock) {
                         if (xblockView.hasChildXBlocks()) {

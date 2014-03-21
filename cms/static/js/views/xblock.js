@@ -50,7 +50,7 @@ define(["jquery", "underscore", "js/views/baseview", "xblock/runtime.v1"],
              * Returns true if the specified xblock has children.
              */
             hasChildXBlocks: function() {
-                return this.$('.edit-button').length > 1;
+                return this.$('.wrapper-xblock').length > 0;
             },
 
             /**

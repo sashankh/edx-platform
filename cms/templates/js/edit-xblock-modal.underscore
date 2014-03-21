@@ -7,7 +7,7 @@
     <div class="modal-window confirm modal-editor modal-lg modal-type-<%= xblockInfo.get('category') %>">
         <form class="edit-xblock-modal" action="#">
             <div class="modal-header">
-                <h2 class="title modal-window-title"><%= gettext("Edit Component") %></h2>
+                <h2 class="title modal-window-title"><%= interpolate(gettext("Editing: %(component_title)s"), { component_title: xblockInfo.get('display_name') }, true) %></h2>
                 <ul class="modal-modes action-list action-modes">
                     <li class="action-item" data-mode="editor"><a href="#" class="editor-button"><%= gettext("Editor") %></a></li>
                     <li class="action-item" data-mode="settings"><a href="#" class="settings-button"><%= gettext("Settings") %></a></li>

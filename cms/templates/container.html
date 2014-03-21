@@ -24,7 +24,7 @@ from django.utils.translation import ugettext as _
 <%
 main_xblock_info = {
     'id': str(xblock_locator),
-    'display-name': xblock.display_name_with_default,
+    'display_name': xblock.display_name_with_default,
     'category': xblock.category,
 };
 %>
@@ -37,7 +37,7 @@ main_xblock_info = {
                 mainXBlockInfo = new XBlockInfo(${json.dumps(main_xblock_info) | n});
 
                 view = new XBlockContainerView({
-                    el: $('.content-area'),
+                    el: $('#content'),
                     model: mainXBlockInfo
                 });
                 view.render();
@@ -70,8 +70,7 @@ main_xblock_info = {
             <h3 class="sr">${_("Page Actions")}</h3>
             <ul>
                 <li class="nav-item">
-                    <!-- TODO: unhide the edit button when container's have reasonable Studio views -->
-                    <a href="#" class="button edit-button is-hidden"><i class="icon-edit"></i> ${_("Edit")}</a>
+                    <a href="#" class="button edit-button"><i class="icon-edit"></i> ${_("Edit")}</a>
                 </li>
             </ul>
         </nav>
@@ -90,6 +89,7 @@ main_xblock_info = {
                 </div>
             </article>
             <aside class="content-supplementary" role="complimentary">
+                % if unit:
                 <div class="bit-publishing">
                     <h3 class="title-3">${_("Publishing Status")}</h3>
                     <p class="copy">${_('This content is published with unit {unit_name}.').format(
@@ -99,6 +99,7 @@ main_xblock_info = {
                         )
                     )}</p>
                 </div>
+                % endif
                 <div class="bit">
                     <h3 class="title-3">${_("What can I do on this page?")}</h3>
                     <ul class="list-details">

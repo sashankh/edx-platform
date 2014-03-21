@@ -1,3 +1,8 @@
+/**
+ * The EditXBlockModal is a Backbone view that shows an xblock editor in a modal window.
+ * It is invoked using the edit method which is passed an existing rendered xblock,
+ * and upon save the element will be re-rendered based upon the updated fields.
+ */
 define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
     "js/models/xblock_info", "js/views/xblock", "js/views/xblock_editor"],
     function($, _, gettext, BaseModal, XBlockInfo, XBlockView, XBlockEditorView) {
@@ -13,6 +18,21 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
             initialize: function() {
                 this.view = this.options.view;
                 this.template = _.template($("#edit-xblock-modal-tpl").text());
+            },
+
+            /**
+             * Show an edit modal for the specified xblock
+             * @param xblockElement The
+             * @param rootXBlockInfo
+             * @param options
+             */
+            edit: function(xblockElement, rootXBlockInfo, options) {
+                this.xblockElement = xblockElement;
+                this.xblockInfo = this.findXBlockInfo(xblockElement, rootXBlockInfo);
+                this.editOptions = options;
+                this.render({
+                    success: _.bind(this.show, this)
+                });
             },
 
             render: function(options) {
@@ -60,21 +80,6 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
                 this.hide();
             },
 
-            /**
-             * Show an edit modal for the specified xblock
-             * @param target
-             * @param rootXBlockInfo
-             * @param options
-             */
-            edit: function(xblockElement, rootXBlockInfo, options) {
-                this.xblockElement = xblockElement;
-                this.xblockInfo = this.findXBlockInfo(xblockElement, rootXBlockInfo);
-                this.editOptions = options;
-                this.render({
-                    success: _.bind(this.show, this)
-                });
-            },
-
             save: function(event) {
                 var self = this;
                 event.preventDefault();
@@ -111,22 +116,12 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
                 var xblockInfo = defaultXBlockInfo;
                 if (xblockElement.length > 0) {
                     xblockInfo = new XBlockInfo({
-                        'id': xblockElement.data('locator'),
-                        'display-name': xblockElement.data('display-name'),
-                        'category': xblockElement.data('category')
+                        id: xblockElement.data('locator'),
+                        display_name: xblockElement.data('display-name'),
+                        category: xblockElement.data('category')
                     });
                 }
                 return xblockInfo;
-            },
-
-            show: function() {
-                $('body').addClass('modal-window-is-shown');
-                this.$('.wrapper-modal-window-edit-xblock').addClass('is-shown');
-            },
-
-            hide: function() {
-                $('body').removeClass('modal-window-is-shown');
-                this.$('.wrapper-modal-window-edit-xblock').removeClass('is-shown');
             }
         });
 
