@@ -67,11 +67,6 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
                 return editor.length === 1 ? editor : null;
             },
 
-            getComponentEditor: function() {
-                var editor = this.$('.component-editor');
-                return editor.length === 1 ? editor : null;
-            },
-
             getMetadataEditor: function() {
                 return this.metadataEditor;
             },
@@ -132,7 +127,7 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
                 // Note that these values will always be sent back on POST, even if they did not actually change.
                 var metadata = {},
                     metadataNameElements;
-                metadataNameElements = this.getComponentEditor().find('[data-metadata-name]');
+                metadataNameElements = this.$('[data-metadata-name]');
                 metadataNameElements.each(function (element) {
                     var key = $(element).data("metadata-name"),
                         value = element.value;
