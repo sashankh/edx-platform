@@ -56,15 +56,31 @@ define(["jquery", "underscore", "js/views/baseview", "js/views/xblock", "js/view
                         xblockElement = self.findXBlockElement(target);
                     event.preventDefault();
                     modal = new EditXBlockModal({
-                        el: $('.edit-xblock-modal'),
-                        view: self.view
+                        el: $('.edit-xblock-modal')
                     });
                     modal.edit(xblockElement, self.model,
                         {
-                            success: function(element) {
-                                self.addButtonActions(element);
+                            refresh: function(xblockInfo) {
+                                self.refreshXBlock(xblockInfo, xblockElement);
                             }
                         });
+                });
+            },
+
+            refreshXBlock: function(xblockInfo, xblockElement) {
+                var self = this,
+                    temporaryView;
+                // Create a temporary view to render the updated XBlock into
+                temporaryView = new XBlockView({
+                    el: xblockElement,
+                    model: xblockInfo,
+                    view: this.view
+                });
+                temporaryView.render({
+                    success: function() {
+                        temporaryView.unbind();  // Remove the temporary view
+                        self.addButtonActions(xblockElement);
+                    }
                 });
             }
         });

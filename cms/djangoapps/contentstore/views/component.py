@@ -271,6 +271,7 @@ def unit_handler(request, tag=None, package_id=None, branch=None, version_guid=N
             'context_course': course,
             'unit': item,
             'unit_locator': locator,
+            'xblocks': [xblock for xblock in xblocks],
             'locators': locators,
             'component_templates': component_templates,
             'draft_preview_link': preview_lms_link,

@@ -3,7 +3,7 @@
  * the available modes.
  */
 define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js/views/xblock",
-    "js/views/metadata", "js/collections/metadata"],
+    "js/views/metadata", "js/collections/metadata", "jquery.inputnumber"],
     function ($, _, gettext, NotificationView, XBlockView, MetadataView, MetadataCollection) {
 
         var XBlockEditorView = XBlockView.extend({
@@ -67,6 +67,11 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
                 return editor.length === 1 ? editor : null;
             },
 
+            getComponentEditor: function() {
+                var editor = this.$('.component-editor');
+                return editor.length === 1 ? editor : null;
+            },
+
             getMetadataEditor: function() {
                 return this.metadataEditor;
             },
@@ -102,10 +107,38 @@ define(["jquery", "underscore", "gettext", "js/views/feedback_notification", "js
                 data = xblock.save();
                 metadata = data.metadata;
                 if (metadataView) {
-                    metadata = _.extend(metadata || {}, metadataView.getModifiedMetadataValues());
+                    metadata = _.extend(metadata || {}, this.getChangedMetadata());
                 }
                 data.metadata = metadata;
                 return data;
+            },
+
+            /**
+             * Returns the metadata that has changed in the editor. This is a combination of the metadata
+             * modified in the "Settings" editor, as well as any custom metadata provided by the component.
+             */
+            getChangedMetadata: function() {
+                var metadataEditor = this.metadataEditor;
+                return _.extend(metadataEditor.getModifiedMetadataValues(), this.getCustomMetadata());
+            },
+
+            /**
+             * Returns custom metadata defined by a particular xmodule that aren't part of the metadata editor.
+             * In particular, this is used for LaTeX high level source.
+             */
+            getCustomMetadata: function() {
+                // Walk through the set of elements which have the 'data-metadata_name' attribute and
+                // build up an object to pass back to the server on the subsequent POST.
+                // Note that these values will always be sent back on POST, even if they did not actually change.
+                var metadata = {},
+                    metadataNameElements;
+                metadataNameElements = this.getComponentEditor().find('[data-metadata-name]');
+                metadataNameElements.each(function (element) {
+                    var key = $(element).data("metadata-name"),
+                        value = element.value;
+                    metadata[key] = value;
+                });
+                return metadata;
             },
 
             getMode: function() {

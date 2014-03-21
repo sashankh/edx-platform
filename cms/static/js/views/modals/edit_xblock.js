@@ -1,11 +1,11 @@
 /**
  * The EditXBlockModal is a Backbone view that shows an xblock editor in a modal window.
  * It is invoked using the edit method which is passed an existing rendered xblock,
- * and upon save the element will be re-rendered based upon the updated fields.
+ * and upon save an optional refresh function can be invoked to update the display.
  */
 define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
-    "js/models/xblock_info", "js/views/xblock", "js/views/xblock_editor"],
-    function($, _, gettext, BaseModal, XBlockInfo, XBlockView, XBlockEditorView) {
+    "js/models/xblock_info", "js/views/xblock_editor"],
+    function($, _, gettext, BaseModal, XBlockInfo, XBlockEditorView) {
         var EditXBlockModal = BaseModal.extend({
             events : {
                 "click .action-save": "save",
@@ -16,7 +16,6 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
             mode: 'editor-mode',
 
             initialize: function() {
-                this.view = this.options.view;
                 this.template = _.template($("#edit-xblock-modal-tpl").text());
             },
 
@@ -81,32 +80,16 @@ define(["jquery", "underscore", "gettext", "js/views/modals/base_modal",
             },
 
             save: function(event) {
-                var self = this;
+                var self = this,
+                    xblockInfo = this.xblockInfo,
+                    refresh = self.editOptions.refresh;
                 event.preventDefault();
                 this.editorView.save({
                     success: function() {
                         self.hide();
-                        self.refreshXBlock();
-                    }
-                });
-            },
-
-            refreshXBlock: function() {
-                var self = this,
-                    success = self.editOptions.success,
-                    xblockElement = this.xblockElement,
-                    temporaryView;
-                // Create a temporary view to render the updated XBlock into
-                temporaryView = new XBlockView({
-                    el: this.xblockElement,
-                    model: this.xblockInfo,
-                    view: this.view
-                });
-                temporaryView.render({
-                    success: function() {
-                        temporaryView.unbind();  // Remove the temporary view
-                        if (success) {
-                            success(xblockElement);
+                        self.$el.html("");
+                        if (refresh) {
+                            refresh(xblockInfo);
                         }
                     }
                 });
