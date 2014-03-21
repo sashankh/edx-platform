@@ -23,8 +23,10 @@ define(["jquery", "underscore", "js/views/baseview", "js/views/xblock", "js/view
             render: function(options) {
                 var self = this,
                     noContentElement = this.noContentElement,
-                    xblockView = this.xblockView;
+                    xblockView = this.xblockView,
+                    loadingElement = this.$('.ui-loading');
                 // Hide both blocks until we know which one to show
+                loadingElement.removeClass('is-hidden');
                 noContentElement.addClass('is-hidden');
                 xblockView.$el.addClass('is-hidden');
 
@@ -40,6 +42,7 @@ define(["jquery", "underscore", "js/views/baseview", "js/views/xblock", "js/view
                         } else {
                             noContentElement.removeClass('is-hidden');
                         }
+                        loadingElement.addClass('is-hidden');
                     }
                 });
             },
