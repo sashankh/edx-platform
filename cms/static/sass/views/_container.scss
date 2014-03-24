@@ -14,6 +14,14 @@ body.view-container {
     padding-bottom: 0;
   }
 
+  .wrapper-mast .mast.has-navigation .nav-actions {
+    bottom: -($baseline*.75);
+
+    .nav-item .button {
+
+    }
+  }
+
   .content-primary, .content-supplementary {
     @include box-sizing(border-box);
     float: left;
@@ -96,7 +104,7 @@ body.view-container  .content-primary {
       }
 
       .xblock-render {
-        margin: 0 $baseline $baseline $baseline;
+        margin: ($baseline/2);
       }
 
       // STATE: nesting level xblock is collapsed
@@ -126,6 +134,7 @@ body.view-container  .content-primary {
 
       .xblock-render {
         margin: ($baseline/2);
+        padding: ($baseline/2);
       }
 
       // STATE: xBlock containers styled as rows.
