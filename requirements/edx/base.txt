@@ -78,6 +78,7 @@ unicodecsv==0.9.4
 
 # Used for debugging
 ipython==0.13.1
+ipdb==0.8
 
 # Used for development operation
 watchdog==0.6.0
@@ -123,7 +124,6 @@ rednose==0.3
 selenium==2.39.0
 splinter==0.5.4
 testtools==0.9.34
-ipdb
 
 git+https://github.com/mfogel/django-settings-context-processor.git
 
