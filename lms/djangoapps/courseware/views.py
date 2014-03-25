@@ -791,7 +791,7 @@ def get_static_tab_contents(request, course, tab):
             html = tab_module.render('student_view').content
         except Exception:  # pylint: disable=broad-except
             html = render_to_string('courseware/error-message.html', None)
-            log.exception("Error rendering course={course}, tab={tab_url}".format(
+            log.exception(u"Error rendering course={course}, tab={tab_url}".format(
                 course=course,
                 tab_url=tab['url_slug']
             ))
