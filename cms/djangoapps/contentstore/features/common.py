@@ -336,10 +336,15 @@ def get_codemirror_value(index=0, find_prefix="$"):
     )
 
 
-def upload_file(filename):
-    path = os.path.join(TEST_ROOT, filename)
+
+def attach_file(filename, sub_path):
+    path = os.path.join(TEST_ROOT, sub_path, filename)
     world.browser.execute_script("$('input.file-input').css('display', 'block')")
     world.browser.attach_file('file', os.path.abspath(path))
+
+
+def upload_file(filename, sub_path=''):
+    attach_file(filename, sub_path)
     button_css = '.upload-dialog .action-upload'
     world.css_click(button_css)
 
